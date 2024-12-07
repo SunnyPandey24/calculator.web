@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background:url("https://images.pexels.com/photos/73873/star-clusters-rosette-nebula-star-galaxies-73873.jpeg?cs=srgb&dl=pexels-pixabay-73873.jpg&fm=jpg&_gl=1*mecvte*_ga*MTkyMTc1MDU0NC4xNzMyNTExNjc5*_ga_8JE65Q40S6*MTczMzI0NTkzOS4xMi4xLjE3MzMyNDYwMjUuMC4wLjA.");
+        }
+
+        .calculator {
+            width: 100%;
+            max-width: 380px;
+            background-color:white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .display {
+            width: 100%;
+            height: 50px;
+            text-align: right;
+            font-size: 2rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: white;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .btn {
+            width: 100%;
+            height: 50px;
+            font-size: 1.5rem;
+            background-color: whitesmoke;
+            border: 1px solid rgba(255, 255, 255, 0.896);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: white;
+        }
+
+        .operator {
+            background-color: rgb(22, 245, 22);
+            color: white;
+        }
+
+        .operator:hover {
+            background-color: greenyellow;
+        }
+
+        .equal {
+            background-color: rgb(108, 108, 237);
+            color: white;
+            grid-column: span 2;
+        }
+
+        .equal:hover {
+            background-color: skyblue;
+        }
+
+        .clear {
+            width: 100%;
+            background-color: rgb(184, 138, 12);
+            color: white;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .clear:hover {
+            background-color: rgb(179, 9, 9);
+        }
+
+        @media (max-width: 500px) {
+            .calculator {
+                padding: 15px;
+                width: 90%;
+            }
+
+            .display {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <input id="display" class="display" type="text" readonly aria-live="polite" aria-label="Calculator Display" />
+        <div class="buttons">
+            <button class="btn" aria-label="Seven" data-value="7">7</button>
+            <button class="btn" aria-label="Eight" data-value="8">8</button>
+            <button class="btn" aria-label="Nine" data-value="9">9</button>
+            <button class="btn operator" aria-label="Divide" data-value="/">/</button>
+
+            <button class="btn" aria-label="Four" data-value="4">4</button>
+            <button class="btn" aria-label="Five" data-value="5">5</button>
+            <button class="btn" aria-label="Six" data-value="6">6</button>
+            <button class="btn operator" aria-label="Multiply" data-value="*">*</button>
+
+            <button class="btn" aria-label="One" data-value="1">1</button>
+            <button class="btn" aria-label="Two" data-value="2">2</button>
+            <button class="btn" aria-label="Three" data-value="3">3</button>
+            <button class="btn operator" aria-label="Subtract" data-value="-">-</button>
+
+            <button class="btn" aria-label="Zero" data-value="0">0</button>
+            <button class="btn" aria-label="Decimal" data-value=".">.</button>
+            <button class="btn equal" aria-label="Equal" data-value="=">=</button>
+            <button class="btn operator" aria-label="Add" data-value="+">+</button>
+        </div>
+        <button class="clear" aria-label="Clear" id="clearButton">C</button>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        const clearButton = document.getElementById('clearButton');
+        const buttons = document.querySelectorAll('.btn');
+
+       
+        buttons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                appendValue(event.target.dataset.value);
+            });
+        });
+
+        
+        document.addEventListener('keydown', (event) => {
+            const key = event.key;
+            if (/[0-9+\-*/.=]/.test(key)) {
+                appendValue(key);
+            } else if (key === 'Enter') {
+                calculateResult();
+            } else if (key === 'Backspace') {
+                deleteLastCharacter();
+            }
+        });
+
+       
+        function appendValue(value) {
+            if (value === '=' || value === 'Enter') {
+                calculateResult();
+            } else {
+                display.value += value;
+            }
+        }
+
+      
+        function calculateResult() {
+            try {
+                display.value = Function('return ' + display.value)();
+            } catch (e) {
+                display.value = 'Error';
+            }
+        }
+
+       
+        clearButton.addEventListener('click', () => {
+            display.value = '';
+        });
+
+        
+        function deleteLastCharacter() {
+            display.value = display.value.slice(0, -1);
+        }
+    </script>
+</body>
+</html>
